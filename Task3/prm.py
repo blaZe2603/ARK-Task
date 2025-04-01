@@ -12,12 +12,13 @@ start_2 = (150, 30)
 end_1 = (100, height-30)
 end_2 = (450, height-30)
 
-NODES = 20
+NODES = 30
 RADIUS = 100
 RADIUS_SQ = RADIUS ** 2
-node = np.random.randint([20, 30], [150, height-30], size=(NODES, 2), dtype=np.int16)
+node = np.random.randint([20, 30], [120, height-30], size=(NODES, 2), dtype=np.int16)
 
 node_possible = [start_1]
+# node_possible = [start_2]
 nodes = []
 graph = {}
 
@@ -40,7 +41,7 @@ def check_white_pixels(image, point1, point2):
                     return False
     return True
 
-# Check distance and line-of-sight between nodes
+#checks if we satisfy both 
 def dist_check(image, p1, p2):
     if check_white_pixels(image, p1, p2):
         return squ_dist(p1, p2) < RADIUS_SQ
@@ -57,6 +58,12 @@ node_possible.append(end_1)
 node_possible = np.array(node_possible)
 cv.circle(image, start_1, 2, 128, -1)
 cv.circle(image, end_1, 2, 128, -1)
+
+# node_possible.append(end_2)  
+# node_possible = np.array(node_possible)
+# cv.circle(image, start_2, 2, 128, -1)
+# cv.circle(image, end_2, 2, 128, -1)
+
 
 cv.imshow("image", image)
 cv.waitKey(2000)
@@ -134,7 +141,7 @@ print("Total Distance:", total_distance)
 # Visualize the path
 if path:
     for i in range(len(path) - 1):
-        cv.line(image, tuple(path[i]), tuple(path[i + 1]), 0, thickness=1, lineType=8, shift=0)
+        cv.line(image, tuple(path[i]), tuple(path[i + 1]), 0, thickness=2, lineType=8, shift=0)
 
 cv.imshow("image", image)
 cv.waitKey(5000)

@@ -12,10 +12,10 @@ start_2 = (150, 30)
 end_1 = (100, height-30)
 end_2 = (450, height-30)
 
-NODES = 30
+NODES = 100
 RADIUS = 100
 RADIUS_SQ = RADIUS ** 2
-node = np.random.randint([20, 30], [120, height-30], size=(NODES, 2), dtype=np.int16)
+node = np.random.randint([20, 30], [width-20, height-30], size=(NODES, 2), dtype=np.int16)
 
 node_possible = [start_1]
 # node_possible = [start_2]
@@ -96,37 +96,43 @@ for (node1, node2) in nodes:
 
 # Dijkstra's algorithm
 def dijkstra(graph, start, goal):
-    distances = {start: 0}
-    previous_nodes = {start: None}
-    unvisited_nodes = list(graph.keys())  # List of all nodes to visit
+    # Store shortest distances from start node
+    shortest_distances = {start: 0}  
+    # Store previous nodes for path reconstruction
+    previous_nodes = {start: None}  
+    # List of nodes that are still unvisited
+    unvisited_nodes = set(graph.keys())  
 
     while unvisited_nodes:
-        current_node = None
-        for node in unvisited_nodes:
-            if current_node is None:
-                current_node = node
-            elif distances.get(node, float('inf')) < distances.get(current_node, float('inf')):
-                current_node = node
+        # Find the node with the smallest known distance
+        current_node = min(
+            unvisited_nodes, 
+            key=lambda node: shortest_distances.get(node, float('inf'))
+        )
 
-        if distances.get(current_node, float('inf')) == float('inf'):
-            break
+        # If the smallest distance is infinity, remaining nodes are unreachable
+        if shortest_distances.get(current_node, float('inf')) == float('inf'):
+            break  
 
+        # If we reached the goal, reconstruct the path
         if current_node == goal:
             path = []
             while current_node is not None:
                 path.append(current_node)
                 current_node = previous_nodes[current_node]
-            return path[::-1]  
+            return path[::-1]  # Reverse to get correct order from start → goal
 
+        # Explore neighbors and update distances
         for neighbor, weight in graph[current_node]:
-            new_distance = distances[current_node] + weight
-            if new_distance < distances.get(neighbor, float('inf')):
-                distances[neighbor] = new_distance
+            new_distance = shortest_distances[current_node] + weight
+            if new_distance < shortest_distances.get(neighbor, float('inf')):
+                shortest_distances[neighbor] = new_distance
                 previous_nodes[neighbor] = current_node
 
+        # Mark current node as visited
         unvisited_nodes.remove(current_node)
 
-    return None  # Return only the path, no distance
+    return None  # No path found
 
 # Convert start and goal nodes to tuples of integers
 start_node = tuple(map(int, node_possible[0]))

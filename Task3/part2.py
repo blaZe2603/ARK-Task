@@ -10,23 +10,19 @@ def my_planner(grid, matrix, start_loc, goal_loc):
     runtime = ''
 
     # Load the image
-    image = cv.imread("Task3/maze.png")
-    height, width, _ = image.shape
-    image = cv.imread("Task3/maze.png", cv.IMREAD_GRAYSCALE)
-
+    height  = matrix[0]
+    width = matrix [1]
+    
     # Define start and end points
-    start_1 = (40, height-30)
-    start_2 = (150, 30)
-    end_1 = (100, height-30)
-    end_2 = (450, height-30)
+    start_1 = start_loc
+    end_1 = goal_loc
 
-    NODES = 30
+    NODES = 300
     RADIUS = 100
     RADIUS_SQ = RADIUS ** 2
     node = np.random.randint([20, 30], [120, height-30], size=(NODES, 2), dtype=np.int16)
 
     node_possible = [start_1]
-    # node_possible = [start_2]
     nodes = []
     graph = {}
 
@@ -34,8 +30,6 @@ def my_planner(grid, matrix, start_loc, goal_loc):
     def squ_dist(p1, p2):
         return np.sum((p1 - p2) ** 2)
 
-    def euclidean_distance(p1, p2):
-        return np.sqrt((p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2)
 
     # Check if we can connect two points without an obstacle
     def check_white_pixels(image, point1, point2):
@@ -58,7 +52,7 @@ def my_planner(grid, matrix, start_loc, goal_loc):
 
     # Add valid nodes to node_possible
     for i in node:
-        if (image[i[1], i[0]] == 255).all():
+        if (matrix[i[1], i[0]] == 0).all():
             cv.circle(image, tuple(i), 2, (128, 0, 0), -1)  
             node_possible.append(i)  
 
@@ -111,7 +105,7 @@ def my_planner(grid, matrix, start_loc, goal_loc):
                 while current_node is not None:
                     path.append(current_node)
                     current_node = previous_nodes[current_node]
-                return path[::-1], distances[goal]  # Return reversed path and distance
+                return path[::-1]  # Return reversed path and distance
 
             for neighbor, weight in graph[current_node]:
                 new_distance = distances[current_node] + weight
@@ -121,14 +115,14 @@ def my_planner(grid, matrix, start_loc, goal_loc):
 
             unvisited_nodes.remove(current_node)
 
-        return None, float('inf')
+        return None
 
     # Convert start and goal nodes to tuples of integers
     start_node = tuple(map(int, node_possible[0]))
     goal_node = tuple(map(int, node_possible[-1]))
 
     # Find the shortest path
-    path, total_distance = dijkstra(graph, start_node, goal_node)
+    path = dijkstra(graph, start_node, goal_node)
 
 
 

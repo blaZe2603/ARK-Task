@@ -99,7 +99,7 @@ def dijkstra(graph, start, goal):
     distances = {start: 0}
     previous_nodes = {start: None}
     unvisited_nodes = list(graph.keys())  # List of all nodes to visit
-    
+
     while unvisited_nodes:
         current_node = None
         for node in unvisited_nodes:
@@ -116,7 +116,7 @@ def dijkstra(graph, start, goal):
             while current_node is not None:
                 path.append(current_node)
                 current_node = previous_nodes[current_node]
-            return path[::-1], distances[goal]  # Return reversed path and distance
+            return path[::-1]  
 
         for neighbor, weight in graph[current_node]:
             new_distance = distances[current_node] + weight
@@ -126,24 +126,23 @@ def dijkstra(graph, start, goal):
 
         unvisited_nodes.remove(current_node)
 
-    return None, float('inf')
+    return None  # Return only the path, no distance
 
 # Convert start and goal nodes to tuples of integers
 start_node = tuple(map(int, node_possible[0]))
 goal_node = tuple(map(int, node_possible[-1]))
 
 # Find the shortest path
-path, total_distance = dijkstra(graph, start_node, goal_node)
+path = dijkstra(graph, start_node, goal_node)
 
 print("Shortest Path:", path)
-print("Total Distance:", total_distance)
-
+# print(graph)
 # Visualize the path
 if path:
     for i in range(len(path) - 1):
         cv.line(image, tuple(path[i]), tuple(path[i + 1]), 0, thickness=2, lineType=8, shift=0)
 
-    
+
 cv.imshow("image", image)
 cv.waitKey(5000)
 cv.destroyAllWindows()

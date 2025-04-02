@@ -143,6 +143,7 @@ if path:
     for i in range(len(path) - 1):
         cv.line(image, tuple(path[i]), tuple(path[i + 1]), 0, thickness=2, lineType=8, shift=0)
 
+    
 cv.imshow("image", image)
 cv.waitKey(5000)
 cv.destroyAllWindows()

@@ -9,7 +9,6 @@ image_l = cv.imread("Task1/left.png", cv.IMREAD_GRAYSCALE)
 
 SIZE = 5
 DISPARITY_RANGE = 15
-EPSILON = 50
 height, width = image_r.shape
 heatmap = np.zeros((height - 2*SIZE, width - 2*SIZE), dtype="float32")
 
@@ -28,7 +27,7 @@ for i in range(SIZE, height - SIZE):
                 min_value = diff
                 best_k = k
 
-        heatmap[i - SIZE, j - SIZE] = 1/(abs(best_k - j) + EPSILON )
+        heatmap[i - SIZE, j - SIZE] = (abs(best_k - j))
 
     print(f"Row {i}: {heatmap[i - 5, 10]:.2f}")  
 

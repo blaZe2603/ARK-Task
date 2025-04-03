@@ -5,6 +5,7 @@ import math
 image = cv.imread("Task2\\pi_image.png", cv.IMREAD_GRAYSCALE)
 painting = cv.imread("Task2\\artwork_picasso.png", cv.IMREAD_GRAYSCALE)
 final_image =  cv.imread("Task2\collage.png", cv.IMREAD_GRAYSCALE)
+final =  cv.imread("Task2\collage.png")
 
 
 height , width  = image.shape
@@ -39,8 +40,10 @@ for i in range(h1-100):
             max_find = temp
             point = [i,j]
 
+cv.circle(final,tuple(point),2 , (255,0,0) , -1)
 print(point,max_find)
 
-cv.imshow("image1", painting)
+cv.imshow("image1", final)
+cv.imshow("image2", painting)
 cv.waitKey(5000)
 cv.destroyAllWindows()
